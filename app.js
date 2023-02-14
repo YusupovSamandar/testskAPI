@@ -3,20 +3,53 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
+const multer = require("multer");
 require('dotenv').config()
 mongoose.pluralize(null);
+
+// Routes
 
 const {
     questions,
     addQuestion,
     updateQuestion,
     deleteQuestion,
-    findByType
+    findByType,
+    findByTypeAndTheme
 } = require("./routes/questions")
+const {
+    users,
+    addUser,
+    deleteUser,
+    updateUser,
+    login
+} = require("./routes/users")
+
+
+
+// setting Up Configuration
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "./uploads/");
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    },
+});
+
+const upload = multer({ storage });
+
+app.use("/uploads", express.static("uploads"));
+
+// ENV FILES
 
 const port = process.env.PORT;
+const user = process.env.USER;
+const password = process.env.PASSWORD
+
 mongoose.set('strictQuery', true);
-// setting Up
+
 app.use(
     bodyParser.urlencoded({
         extended: true,
@@ -36,7 +69,7 @@ app.use(cors());
 
 main().catch(err => console.log(err));
 async function main() {
-    await mongoose.connect('mongodb+srv://samandar:$samandar31@questdb.ktq0bil.mongodb.net/?retryWrites=true&w=majority');
+    await mongoose.connect(`mongodb+srv://${user}:${password}@questdb.ktq0bil.mongodb.net/?retryWrites=true&w=majority`);
 }
 
 mongoose.connection.on("open", function () {
@@ -45,13 +78,28 @@ mongoose.connection.on("open", function () {
 
 app.route("/questions")
     .get(questions)
-    .post(addQuestion)
+    .post(upload.single("questionImg"), addQuestion)
     .delete(deleteQuestion)
     .put(updateQuestion);
 
 
 app.route("/questions/:type")
     .get(findByType);
+
+
+app.route("/questions/:type/:theme")
+    .get(findByTypeAndTheme);
+
+// handle Users
+app.route("/users")
+    .get(users)
+    .post(addUser)
+    .delete(deleteUser)
+    .put(updateUser);
+
+
+app.route("/user/login")
+    .post(login);
 
 
 app.listen(port, () => {
