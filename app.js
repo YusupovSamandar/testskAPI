@@ -16,15 +16,26 @@ const {
     deleteQuestion,
     findByType,
     findByTypeAndTheme
-} = require("./routes/questions")
+} = require("./routes/questions");
 const {
     users,
     addUser,
     deleteUser,
     updateUser,
     login
-} = require("./routes/users")
+} = require("./routes/users");
+const {
+    sessions,
+    addSession,
+    deleteSession,
+    updateSession
+} = require("./routes/sessions");
 
+const {
+    login: studentLogin,
+    deleteStudent,
+    students
+} = require("./routes/students")
 
 
 // setting Up Configuration
@@ -82,6 +93,16 @@ app.route("/questions")
     .delete(deleteQuestion)
     .put(updateQuestion);
 
+app.route("/sessions")
+    .get(sessions)
+    .post(addSession)
+    .delete(deleteSession)
+    .put(updateSession);
+
+app.route("/students")
+    .get(students)
+    .post(studentLogin)
+    .delete(deleteStudent);
 
 app.route("/questions/:type")
     .get(findByType);

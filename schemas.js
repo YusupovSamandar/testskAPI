@@ -9,6 +9,20 @@ const questionsSchema = new Schema({
     theme: String
 });
 
+const studentSchema = new Schema({
+    user: String,
+    password: String,
+    sessionID: String
+});
+
+const sessionsSchema = new Schema({
+    manager: String,
+    subject: String,
+    theme: String,
+    numberOfQuestions: String,
+    givenTime: String
+});
+
 const userSchema = new Schema({
     login: { type: String, unique: true },
     password: String
@@ -16,5 +30,7 @@ const userSchema = new Schema({
 
 module.exports = {
     questionsSchema,
-    userSchema
+    userSchema,
+    studentSchema,
+    sessionsSchema
 }
