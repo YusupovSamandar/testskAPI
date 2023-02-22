@@ -19,7 +19,7 @@ const sessionsSchema = new Schema({
     manager: String,
     subject: String,
     theme: String,
-    numberOfQuestions: String,
+    numberOfQuestions: Number,
     givenTime: String
 });
 

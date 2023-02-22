@@ -16,10 +16,10 @@ exports.addSession = async (req, res) => {
     let { students, ...rest } = req.body
     const newUser = new Sessions(rest);
     const newSession = await newUser.save();
-    students = students.map((e) => {
-        return { ...e, sessionID: newSession._id }
-    })
     if (students) {
+        students = students.map((e) => {
+            return { ...e, sessionID: newSession._id }
+        })
         const output = await addStudents(students);
         res.send(output);
     } else {
